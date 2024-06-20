@@ -4,24 +4,17 @@ import QtQuick.Controls 2.12
 import com.example.uartreader 1.0
 
 Item {
-    Component.onCompleted: {
-        funcBar.adminBtnEnable = true
-        funcBar.funcBtnEnable = false
-        header.welcomeText = "Scan to login"
-        uartReader.openPort()
-    }
 
     UartReader {
             id: uartReader
             portName: "COM3"
             baudRate: 9600
             onDataReceived: {
-                if(data == "code5") {
-                    mainLoader.source = "HomePage.qml"
+                if(data == "1") {
+                    stackView.push("HomePage.qml",{"userId": "1"},StackView.Immediate)
                 }
             }
         }
-
     ListModel {
         id: listModel
         ListElement { name: "News"; page: "HomePage.qml" }
@@ -30,24 +23,40 @@ Item {
 
     GridView {
         id: gridView
-        anchors.fill: parent
+        width: parent.width - 50
+        height: parent.height - 50
+        anchors.centerIn: parent
         model: listModel
-        cellHeight: 240
-        cellWidth: 240
-        delegate: Rectangle {
-            width: 200
-            height: 200
-            color: "grey"
-            radius: 5
-            Text {
-                color: "white"
-                text: name
+        cellHeight: gridView.height/2
+        cellWidth: gridView.width/2
+        delegate: delegate
+    }
+
+    Component {
+        id : delegate
+        Item{
+            height: gridView.height/2
+            width: gridView.width/2
+            HomePageBigButton{
+                height: parent.height - 50
+                width: parent.width - 50
                 anchors.centerIn: parent
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: mainLoader.source = page
+                buttonText: name
+                onClicked: stackView.push(page,{"userId": "1"},StackView.Immediate)
             }
         }
+    }
+
+    function setup() {
+        header.welcomeText = "Scan to login"
+        funcBar.isLogin = false
+        funcBar.adminBtnEnable = true
+        funcBar.homeBtnEnable = false
+        funcBar.backBtnEnable = false
+        funcBar.logoutBtnEnable = false
+    }
+
+    Component.onCompleted: {
+        setup()
     }
 }

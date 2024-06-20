@@ -11,27 +11,38 @@ Window {
 
     Image {
         id: background
-        anchors.fill: root
-        source: "qrc:/Items/background.jpg"
+        width: parent.width
+        height: parent.height
+        source: "qrc:/Items/background.PNG"
     }
 
     Header{
         id : header
         welcomeText : "Scan to login"
+        libraryName: "Thư viện Đại học BCKABSCKH"
     }
 
-    Loader{
+    Rectangle{
         id : mainLoader
+        color: Qt.rgba(0,0,0,0)
         anchors{
             left: parent.left
             right: parent.right
             top: header.bottom
             bottom: funcBar.top
         }
-        source: "StackViewPage.qml"
+        StackView {
+            id: stackView
+            anchors.fill: parent
+            initialItem: "LoginPage.qml"
+        }
     }
 
     FunctionBar {
         id: funcBar
+        onBackClick : {
+            stackView.pop(StackView.Immediate)
+            stackView.currentItem.setup()
+        }
     }
 }

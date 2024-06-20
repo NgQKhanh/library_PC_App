@@ -10,12 +10,13 @@ Rectangle {
         right: parent.right
     }
     property alias welcomeText: welcomeTextId.text
+    property string libraryName
 
     color: Qt.rgba(0,0,0,0.1)
 
     Image {
         id: logo
-        width: 80
+        width: 70
         height: 80
         anchors {
             left: parent.left
@@ -32,13 +33,12 @@ Rectangle {
             leftMargin: 20
             verticalCenter: parent.verticalCenter
         }
-        spacing: 15
+        spacing: 10
 
         Text {
-            id: libraryName
-            font.pointSize: 20
+            font.pointSize: 18
             font.bold: true
-            text: "Thư viện Đại học Quốc gia"
+            text: libraryName
         }
 
         Text {

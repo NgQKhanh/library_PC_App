@@ -4,59 +4,64 @@ import QtQuick.Layouts 1.12
 
 Rectangle {
     id: funcBar
-    height: 50
+    height: 72
+    width: parent.width
     anchors {
         left: parent.left
-        leftMargin: 10
         bottom: parent.bottom
         bottomMargin: 10
         right: parent.right
     }
-    property string previousPage
+    property string setHomePage
     property bool adminBtnEnable
-    property bool funcBtnEnable
+    property bool logoutBtnEnable
+    property bool homeBtnEnable
+    property bool backBtnEnable
+    property bool isLogin
+
+    signal backClick
 
     color: Qt.rgba(0,0,0,0)
 
-    RowLayout {
-        id: buttonRow
-        visible: funcBtnEnable
-        height: funcBar.height
-        width: backBtn.width*3+9
-        spacing: 3
+    Rectangle {
+        width: parent.width - 40
+        height: 3
+        color: "orange"
         anchors {
-            left: funcBar.left
             top: funcBar.top
+            horizontalCenter: parent.horizontalCenter
+        }
+    }
+
+    Row {
+        id: buttonRow
+        spacing: 2
+        anchors {
+            left: parent.left
+            leftMargin: 20
+            bottom: parent.bottom
+            bottomMargin: 10
         }
 
         FunctionButton{
             id: logoutBtn
             buttonText: "Logout"
-            onClicked: {
-                onClicked: mainLoader.source = "LoginPage.qml"
-            }
-        }
-
-        Rectangle {
-            width: 2
-            height: 50
-            color: "#888888"
+            visible: logoutBtnEnable
+            onClicked: stackView.push("LoginPage.qml",StackView.Immediate)
         }
 
         FunctionButton{
             id: homeBtn
             buttonText: "Home"
-            onClicked: {
-                onClicked: mainLoader.source = "HomePage.qml"
-            }
+            visible: homeBtnEnable
+            onClicked: stackView.push(setHomePage,StackView.Immediate)
         }
 
         FunctionButton{
             id: backBtn
             buttonText: "Back"
-            onClicked: {
-                onClicked: mainLoader.source = previousPage
-            }
+            visible: backBtnEnable
+            onClicked: backClick()
         }
     }
 
@@ -69,8 +74,6 @@ Rectangle {
             bottom: parent.bottom
             rightMargin: 10
         }
-        onClicked: {
-            onClicked: mainLoader.source = "AdminPage.qml"
-        }
+        onClicked: stackView.push("AdminPage.qml",StackView.Immediate)
     }
 }

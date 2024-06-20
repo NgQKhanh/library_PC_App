@@ -11,5 +11,8 @@
         <file>StackViewPage.qml</file>
         <file>SearchPage.qml</file>
         <file>SearchDetailPage.qml</file>
+        <file>CustomScrollBar.qml</file>
+        <file>BorrowPage.qml</file>
+        <file>ReturnPage.qml</file>
     </qresource>
 </RCC>

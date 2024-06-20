@@ -3,47 +3,45 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 
 Item {
-    width: parent.width
-    height: parent.height
     Rectangle {
         id : searchPage
         width: parent.width - 40
         height: parent.height - 40
         anchors.centerIn: parent
-        radius: 10
         color: "lightgrey"
         border.color: "darkgrey"
         border.width: 2
+        radius: 10
 
-        ColumnLayout {
+        Column {
             anchors.fill: parent
             anchors.margins: 20
             spacing: 10
 
-            RowLayout {
-                spacing: 10
-                Layout.alignment: Qt.AlignHCenter
+            Rectangle {
+                width: parent.width
+                height: 50
+                color: Qt.rgba(0,0,0,0)
 
-                TextField {
-                    id: searchField
-                    font.pointSize: 12
-                    placeholderText: "Enter key word"
+                Text {
+                    anchors{
+                        left: parent.left
+                        leftMargin: 40
+                    }
+                    font.pointSize: 20
+                    font.bold: true
+                    text: "Borrow list: "
                     verticalAlignment: TextInput.AlignVCenter
                     Layout.preferredHeight: 50
                     Layout.preferredWidth: 400
                 }
 
-                ComboBox {
-                    id: searchCriteria
-                    font.pointSize: 12
-                    model: ["Title", "Author", "Category", "Publisher"]
-                    Layout.preferredWidth: 150
-                    Layout.preferredHeight: 50
-                }
-
                 FunctionButton {
-                    id : btnSearch
-                    buttonText: "Search"
+                    anchors{
+                        right: parent.right
+                        rightMargin: 40
+                    }
+                    buttonText: "Confirm"
                     onClicked: {
                         // Implement search functionality here
                         console.log("Search term:", searchField.text)
@@ -53,7 +51,7 @@ Item {
             }
 
             Rectangle {
-                width: parent.width - 200
+                width: parent.width - 80
                 height: parent.height - 100
                 anchors.horizontalCenter: parent.horizontalCenter
                 border.color: "grey"
@@ -108,12 +106,18 @@ Item {
                                     font.pointSize: 12
                                 }
                             }
-                            MouseArea {
-                                id: mouseArea
-                                anchors.fill: parent
-                                onClicked: {
-                                    console.log("Select: " + model.title + " " + model.author)
-                                    stackView.push("SearchDetailPage.qml",StackView.Immediate)
+                            Image {
+                                width: 40
+                                height: 40
+                                anchors {
+                                    right: parent.right
+                                    verticalCenter: parent.verticalCenter
+                                    rightMargin: 30
+                                }
+                                source: "qrc:/Items/cancel_icon.jpg"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: console.log("Cancel: " + index)
                                 }
                             }
                         }
@@ -127,18 +131,13 @@ Item {
     }
 
     function setup() {
-        header.welcomeText = "Search Document"
+        header.welcomeText = "Borrow books"
         funcBar.adminBtnEnable = false
         funcBar.homeBtnEnable = true
         funcBar.backBtnEnable = true
+        funcBar.logoutBtnEnable = true
+        funcBar.setHomePage = "HomePage.qml"
 
-        if(true === funcBar.isLogin){
-            funcBar.logoutBtnEnable = true
-            funcBar.setHomePage = "HomePage.qml"
-        } else {
-            funcBar.logoutBtnEnable = false
-            funcBar.setHomePage = "LoginPage.qml"
-        }
     }
 
     Component.onCompleted: {
