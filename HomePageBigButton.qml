@@ -8,6 +8,8 @@ Rectangle {
     radius: 15
 
     property alias buttonText: buttonTextId.text
+    property alias imageSource: background.source
+
     signal clicked()
 
     gradient: Gradient {
@@ -27,14 +29,25 @@ Rectangle {
             hpbutton.clicked()
         }
     }
-
-    Text {
-        id: buttonTextId
-        text: buttonText
-        anchors.centerIn: parent
-        font.bold: true
-        font.pointSize: 20
-        color: "black"
+    Row {
+        anchors.centerIn:  parent
+        spacing: 20
+        Image {
+            id: background
+            width: 50
+            height: 50
+            source: hpbutton.imageSource
+        }
+        Text {
+            id: buttonTextId
+            text: buttonText
+            //anchors.centerIn: parent
+            font.bold: true
+            font.pointSize: 20
+            color: "black"
+        }
     }
+
+
 }
 

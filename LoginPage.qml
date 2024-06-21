@@ -17,8 +17,8 @@ Item {
         }
     ListModel {
         id: listModel
-        ListElement { name: "News"; page: "HomePage.qml" }
-        ListElement { name: "Search"; page: "SearchPage.qml" }
+        ListElement { name: "News"; page: "HomePage.qml"; icon: "qrc:/Items/news_icon.png" }
+        ListElement { name: "Search"; page: "SearchPage.qml"; icon: "qrc:/Items/search_icon.png" }
     }
 
     GridView {
@@ -42,6 +42,7 @@ Item {
                 width: parent.width - 50
                 anchors.centerIn: parent
                 buttonText: name
+                imageSource: icon
                 onClicked: stackView.push(page,{"userId": "1"},StackView.Immediate)
             }
         }

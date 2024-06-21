@@ -8,10 +8,10 @@ Item {
 
     ListModel {
         id: listModel
-        ListElement { name: "News"; page: "" }
-        ListElement { name: "Search"; page: "SearchPage.qml" }
-        ListElement { name: "Borrow"; page: "BorrowPage.qml" }
-        ListElement { name: "Return"; page: "ReturnPage.qml" }
+        ListElement { name: "News"; page: ""; icon: "qrc:/Items/news_icon.png" }
+        ListElement { name: "Search"; page: "SearchPage.qml"; icon: "qrc:/Items/search_icon.png" }
+        ListElement { name: "Borrow"; page: "BorrowPage.qml"; icon: "qrc:/Items/borrow_icon.png" }
+        ListElement { name: "Return"; page: "ReturnPage.qml"; icon: "qrc:/Items/return_icon.png" }
     }
 
     GridView {
@@ -35,6 +35,7 @@ Item {
                 width: parent.width - 50
                 anchors.centerIn: parent
                 buttonText: name
+                imageSource: icon
                 onClicked: stackView.push(page,StackView.Immediate)
             }
         }

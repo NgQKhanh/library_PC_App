@@ -29,6 +29,7 @@ Item {
                     font.pointSize: 12
                     placeholderText: "Enter key word"
                     verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 24
                     Layout.preferredHeight: 50
                     Layout.preferredWidth: 400
                 }
@@ -36,9 +37,24 @@ Item {
                 ComboBox {
                     id: searchCriteria
                     font.pointSize: 12
+                    leftPadding: 24
                     model: ["Title", "Author", "Category", "Publisher"]
                     Layout.preferredWidth: 150
                     Layout.preferredHeight: 50
+                    delegate: ItemDelegate {
+                        width: 150
+                        height: 40
+                        Text {
+                            leftPadding: 24
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: modelData
+                            font.pointSize: 12
+                        }
+                        background: Rectangle {
+                            border.color: "#ccc"
+                            border.width: 1
+                        }
+                    }
                 }
 
                 FunctionButton {
@@ -53,17 +69,18 @@ Item {
             }
 
             Rectangle {
+                id : dataShow
                 width: parent.width - 200
                 height: parent.height - 100
-                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.alignment: Qt.AlignHCenter
                 border.color: "grey"
-                border.width: 1
+                border.width: 3
                 radius: 5
 
                 ListView {
                     id: resultsList
-                    width: parent.width
-                    height: parent.height
+                    width: parent.width - 6
+                    height: parent.height - 6
                     clip: true
                     model: ListModel {
                         id: resultsModel
@@ -89,6 +106,12 @@ Item {
                             id : info
                             width: parent.width
                             height: parent.height
+                            anchors{
+                                left: parent.left
+                                leftMargin: 3
+                                top: parent.top
+                                topMargin: 3
+                            }
                             color: "white"
                             border.color: "grey"
                             border.width: 1

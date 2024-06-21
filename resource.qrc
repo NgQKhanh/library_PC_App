@@ -4,5 +4,9 @@
         <file>Items/background.jpg</file>
         <file>Items/background.PNG</file>
         <file>Items/cancel_icon.jpg</file>
+        <file>Items/search_icon.png</file>
+        <file>Items/news_icon.png</file>
+        <file>Items/borrow_icon.png</file>
+        <file>Items/return_icon.png</file>
     </qresource>
 </RCC>
