@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Dialogs
+import com.example.uartreader 1.0
 
 Window {
     id : root
@@ -8,6 +10,10 @@ Window {
     width: 1024
     height: 680
     title: qsTr("Self Checkin")
+
+    Definition{
+        id: def
+    }
 
     Image {
         id: background
@@ -18,8 +24,8 @@ Window {
 
     Header{
         id : header
-        welcomeText : "Scan to login"
-        libraryName: "Thư viện Đại học BCKABSCKH"
+        welcomeText : "Quẹt thẻ để đăng nhập"
+        libraryName: "Thư viện Đại Học FKFNKJDBVKJD"
     }
 
     Rectangle{
@@ -35,6 +41,13 @@ Window {
             id: stackView
             anchors.fill: parent
             initialItem: "LoginPage.qml"
+
+            function handleUARTSignal(data) {
+                var currentQMLItem = stackView.currentItem;
+                if (currentQMLItem && typeof currentQMLItem.processUARTSignal === "function") {
+                    currentQMLItem.processUARTSignal(data);
+                }
+            }
         }
     }
 
@@ -44,5 +57,31 @@ Window {
             stackView.pop(StackView.Immediate)
             stackView.currentItem.setup()
         }
+    }
+
+    MessageDialog {
+        id: dialog
+        title: "Thông báo"
+        buttons: MessageDialog.Close
+        text: diaText
+        property string diaText
+
+        function showDialog(text){
+            dialog.diaText = text
+            dialog.open()
+        }
+    }
+
+    UartReader {
+        id: uartReader
+        portName: "COM3"
+        baudRate: 115200
+        onDataReceived: {
+            stackView.handleUARTSignal(data)
+        }
+    }
+
+    Component.onCompleted: {
+        uartReader.openPort()
     }
 }

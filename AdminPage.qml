@@ -1,54 +1,96 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.12
 import com.example.uartreader 1.0
 
 Rectangle {
-    visible: true
-    width: 640
-    height: 480
+    width: parent.width - 40
+    height: parent.height - 40
+    anchors.centerIn: parent
+    color: "lightgrey"
+    border.color: "darkgrey"
+    border.width: 2
+    radius: 10
 
-    UartReader {
-            id: uartReader
-            portName: portComboBox.currentText
-            baudRate: 9600
-            onDataReceived: {
-                receivedDataTextEdit.text = data
-            }
+    Rectangle{
+        width: parent.width
+        height: 200
+        color: Qt.rgba(0,0,0,0)
+        anchors{
+            left: parent.left
+            leftMargin: 50
+            top: parent.top
+            topMargin: 50
         }
 
-        Column {
+        ColumnLayout{
+            width: parent.width
+            height: parent.height
             spacing: 10
-            anchors.centerIn: parent
 
-            ComboBox {
-                id: portComboBox
-                width: parent.width
-                model: uartReader.availablePorts
-                onCurrentTextChanged: {
-                    uartReader.portName = currentText
-                    uartReader.openPort()
+            // Setup UART Section
+            Rectangle {
+                Text {
+                    text: "Setup UART: "
                 }
             }
 
-            TextEdit {
-                id: receivedDataTextEdit
-                width: parent.width
-                height: 200
-                readOnly: true
-            }
-
-            Row {
-                spacing: 10
-
+            RowLayout {
+                ComboBox {
+                    id: portComboBox
+                    width: parent.width
+                    model: uartReader.availablePorts
+                    onCurrentTextChanged: {
+                        uartReader.portName = currentText
+                    }
+                }
                 Button {
                     text: "Open Port"
                     onClicked: uartReader.openPort()
                 }
-
                 Button {
                     text: "Close Port"
                     onClicked: uartReader.closePort()
                 }
             }
+
+            // Change Language Section
+            RowLayout {
+                Rectangle {
+                    width: 100
+                    Text {
+                        text: "Change language: "
+                    }
+                }
+                ComboBox {
+                    width: 150
+                    model: ["Việt Nam", "English"]
+                    onCurrentTextChanged: {
+                        if (currentText === "Việt Nam") {
+                            def.isVN = true
+                        } else if(currentText === "English"){
+                            def.isVN = false
+                        }
+                    }
+                    delegate: ItemDelegate {
+                        text: modelData
+                    }
+                }
+            }
         }
     }
+
+    // Setup function to initialize page
+    function setup() {
+        console.log("Nav => AdminPage")
+        header.welcomeText = "Admin"
+        funcBar.adminBtnEnable = false
+        funcBar.homeBtnEnable = false
+        funcBar.backBtnEnable = true
+        funcBar.logoutBtnEnable = true
+    }
+
+    Component.onCompleted: {
+        setup()
+    }
+}

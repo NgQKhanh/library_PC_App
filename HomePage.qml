@@ -5,13 +5,14 @@ import QtQuick.Controls 2.12
 Item {
     id : homepage
     property var userId
+    property var userName
 
     ListModel {
         id: listModel
-        ListElement { name: "News"; page: ""; icon: "qrc:/Items/news_icon.png" }
-        ListElement { name: "Search"; page: "SearchPage.qml"; icon: "qrc:/Items/search_icon.png" }
-        ListElement { name: "Borrow"; page: "BorrowPage.qml"; icon: "qrc:/Items/borrow_icon.png" }
-        ListElement { name: "Return"; page: "ReturnPage.qml"; icon: "qrc:/Items/return_icon.png" }
+        ListElement { name: "Tin tức"; page: ""; icon: "qrc:/Items/news_icon.png" }
+        ListElement { name: "Tra cứu"; page: "SearchPage.qml"; icon: "qrc:/Items/search_icon.png" }
+        ListElement { name: "Mượn sách"; page: "BorrowPage.qml"; icon: "qrc:/Items/borrow_icon.png" }
+        ListElement { name: "Trả sách"; page: "ReturnPage.qml"; icon: "qrc:/Items/return_icon.png" }
     }
 
     GridView {
@@ -30,6 +31,7 @@ Item {
         Item{
             height: gridView.height/2
             width: gridView.width/2
+
             HomePageBigButton{
                 height: parent.height - 50
                 width: parent.width - 50
@@ -42,7 +44,8 @@ Item {
     }
 
     function setup() {
-        header.welcomeText = "Welcome: Nguyen Quoc Khanh"
+        console.log("Nav => HomPage")
+        header.welcomeText = def.homeHeaderText + userName
         funcBar.isLogin = true
         funcBar.adminBtnEnable = true
         funcBar.homeBtnEnable = false
@@ -52,7 +55,6 @@ Item {
     }
 
     Component.onCompleted: {
-        console.log("User ID:", userId)
         setup()
     }
 }

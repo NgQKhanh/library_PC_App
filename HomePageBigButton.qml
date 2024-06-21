@@ -12,15 +12,21 @@ Rectangle {
 
     signal clicked()
 
-    gradient: Gradient {
-        GradientStop { position: 0; color: "white" }
-        GradientStop { position: 1; color: "#B9A9A9" }
+    // gradient: Gradient {
+    //     GradientStop { position: 0; color: "white" }
+    //     GradientStop { position: 1; color: "#B9A9A9" }
+    // }
+        color: Qt.rgba(0,0,0,0)
+    Image {
+        width: parent.width
+        height: parent.height
+        source: "qrc:/Items/blue_button.png"
     }
 
-    border{
-        color: "#888888"
-        width: 2
-    }
+    // border{
+    //     color: "#888888"
+    //     width: 2
+    // }
 
     MouseArea {
         id: mouseArea

@@ -11,7 +11,8 @@ Item {
     }
 
     function setup() {
-        header.welcomeText = "Search Detail"
+        console.log("Nav => SearchDetailPage")
+        header.welcomeText = def.searchDetailHeaderText
         funcBar.adminBtnEnable = false
         funcBar.homeBtnEnable = true
         funcBar.backBtnEnable = true

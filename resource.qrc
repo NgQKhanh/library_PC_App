@@ -8,5 +8,6 @@
         <file>Items/news_icon.png</file>
         <file>Items/borrow_icon.png</file>
         <file>Items/return_icon.png</file>
+        <file>Items/blue_button.png</file>
     </qresource>
 </RCC>

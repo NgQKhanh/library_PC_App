@@ -45,29 +45,36 @@ Rectangle {
 
         FunctionButton{
             id: logoutBtn
-            buttonText: "Logout"
+            buttonText: def.fBtnLogout
             visible: logoutBtnEnable
             onClicked: stackView.push("LoginPage.qml",StackView.Immediate)
         }
 
         FunctionButton{
             id: homeBtn
-            buttonText: "Home"
+            buttonText: def.fBtnHome
             visible: homeBtnEnable
             onClicked: stackView.push(setHomePage,StackView.Immediate)
         }
 
         FunctionButton{
             id: backBtn
-            buttonText: "Back"
+            buttonText: def.fBtnBack
             visible: backBtnEnable
             onClicked: backClick()
+        }
+
+        FunctionButton{
+            id: helpBtn
+            buttonText: def.fBtnHelp
+            //visible: backBtnEnable
+            //onClicked: backClick()
         }
     }
 
     FunctionButton{
         id: adminBtn
-        buttonText: "Admin"
+        buttonText: def.fBtnAdmin
         visible: adminBtnEnable
         anchors {
             right: parent.right

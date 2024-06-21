@@ -14,5 +14,6 @@
         <file>CustomScrollBar.qml</file>
         <file>BorrowPage.qml</file>
         <file>ReturnPage.qml</file>
+        <file>Definition.qml</file>
     </qresource>
 </RCC>

@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 
 Item {
+    id: borrowPage
     Rectangle {
         id : searchPage
         width: parent.width - 40
@@ -30,7 +31,7 @@ Item {
                     }
                     font.pointSize: 20
                     font.bold: true
-                    text: "Borrow list: "
+                    text: "Danh sách mượn: "
                     verticalAlignment: TextInput.AlignVCenter
                     Layout.preferredHeight: 50
                     Layout.preferredWidth: 400
@@ -41,7 +42,7 @@ Item {
                         right: parent.right
                         rightMargin: 40
                     }
-                    buttonText: "Confirm"
+                    buttonText: "Hoàn tất"
                     onClicked: {
                         // Implement search functionality here
                         console.log("Search term:", searchField.text)
@@ -130,14 +131,41 @@ Item {
         }
     }
 
+    function processUARTSignal(bookId){
+        console.error("[BorrowPage]  UART received: " + bookId)
+        // var xhr = new XMLHttpRequest();
+        // var url = "http://localhost:3000/app/RFIDlogin";
+        // xhr.open("POST", url);
+        // xhr.setRequestHeader("Content-Type", "application/json");
+
+        // xhr.onreadystatechange = function() {
+        //     if (xhr.readyState === XMLHttpRequest.DONE) {
+        //         if (xhr.status === 200) {
+        //             var response = JSON.parse(xhr.responseText);
+        //             console.log("[LoginPage] User login: ", response.username);
+        //             stackView.push("HomePage.qml",{"userId": userId,"userName": response.username},StackView.Immediate)
+        //         }
+        //         else if (xhr.status === 400) {
+        //             dialog.showDialog("Người dùng chưa đăng ký!")
+        //             console.error("[LoginPage] Request failed with status: " + xhr.status);
+        //         } else {
+        //             dialog.showDialog("Có lỗi xảy ra: " + xhr.status)
+        //             console.error("[LoginPage]  Request failed with status: " + xhr.status);
+        //         }
+        //     }
+        // };
+        // var sendData = JSON.stringify({ "userId": userId });
+        // xhr.send(sendData);
+    }
+
     function setup() {
-        header.welcomeText = "Borrow books"
+        console.log("Nav => BorrowPage")
+        header.welcomeText = def.borrowHeaderText
         funcBar.adminBtnEnable = false
         funcBar.homeBtnEnable = true
         funcBar.backBtnEnable = true
         funcBar.logoutBtnEnable = true
         funcBar.setHomePage = "HomePage.qml"
-
     }
 
     Component.onCompleted: {

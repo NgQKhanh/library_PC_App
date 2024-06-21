@@ -27,7 +27,7 @@ Item {
                 TextField {
                     id: searchField
                     font.pointSize: 12
-                    placeholderText: "Enter key word"
+                    placeholderText: "Nhập từ khoá"
                     verticalAlignment: TextInput.AlignVCenter
                     leftPadding: 24
                     Layout.preferredHeight: 50
@@ -38,7 +38,7 @@ Item {
                     id: searchCriteria
                     font.pointSize: 12
                     leftPadding: 24
-                    model: ["Title", "Author", "Category", "Publisher"]
+                    model: ["Tiêu đề", "Tác giả", "Phân loại", "Nhà xuất bản"]
                     Layout.preferredWidth: 150
                     Layout.preferredHeight: 50
                     delegate: ItemDelegate {
@@ -59,7 +59,7 @@ Item {
 
                 FunctionButton {
                     id : btnSearch
-                    buttonText: "Search"
+                    buttonText: "Tìm kiếm"
                     onClicked: {
                         // Implement search functionality here
                         console.log("Search term:", searchField.text)
@@ -74,13 +74,13 @@ Item {
                 height: parent.height - 100
                 Layout.alignment: Qt.AlignHCenter
                 border.color: "grey"
-                border.width: 3
+                border.width: 1
                 radius: 5
 
                 ListView {
                     id: resultsList
-                    width: parent.width - 6
-                    height: parent.height - 6
+                    width: parent.width
+                    height: parent.height
                     clip: true
                     model: ListModel {
                         id: resultsModel
@@ -108,9 +108,7 @@ Item {
                             height: parent.height
                             anchors{
                                 left: parent.left
-                                leftMargin: 3
                                 top: parent.top
-                                topMargin: 3
                             }
                             color: "white"
                             border.color: "grey"
@@ -150,7 +148,8 @@ Item {
     }
 
     function setup() {
-        header.welcomeText = "Search Document"
+        console.log("Nav => SearchPage")
+        header.welcomeText = def.searchHeaderText
         funcBar.adminBtnEnable = false
         funcBar.homeBtnEnable = true
         funcBar.backBtnEnable = true
