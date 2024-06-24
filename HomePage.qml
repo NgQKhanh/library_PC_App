@@ -11,6 +11,7 @@ Item {
         id: listModel
         ListElement { name: "Tin tức"; page: ""; icon: "qrc:/Items/news_icon.png" }
         ListElement { name: "Tra cứu"; page: "SearchPage.qml"; icon: "qrc:/Items/search_icon.png" }
+        ListElement { name: "Của tôi"; page: ""; icon: "qrc:/Items/myAccount_icon.png" }
         ListElement { name: "Mượn sách"; page: "BorrowPage.qml"; icon: "qrc:/Items/borrow_icon.png" }
         ListElement { name: "Trả sách"; page: "ReturnPage.qml"; icon: "qrc:/Items/return_icon.png" }
     }
@@ -22,7 +23,7 @@ Item {
         anchors.centerIn: parent
         model: listModel
         cellHeight: gridView.height/2
-        cellWidth: gridView.width/2
+        cellWidth: gridView.width/3
         delegate: delegate
     }
 
@@ -30,7 +31,7 @@ Item {
         id : delegate
         Item{
             height: gridView.height/2
-            width: gridView.width/2
+            width: gridView.width/3
 
             HomePageBigButton{
                 height: parent.height - 50
@@ -38,7 +39,7 @@ Item {
                 anchors.centerIn: parent
                 buttonText: name
                 imageSource: icon
-                onClicked: stackView.push(page,StackView.Immediate)
+                onClicked: stackView.push(page,{"userId": userId},StackView.Immediate)
             }
         }
     }

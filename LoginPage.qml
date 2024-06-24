@@ -7,7 +7,7 @@ Item {
     id : loginPage
     ListModel {
         id: listModel
-        ListElement { name: "Đăng nhập" ; page: "HomePage.qml"; icon: "qrc:/Items/news_icon.png" }
+        ListElement { name: "Tin tức" ; page: "HomePage.qml"; icon: "qrc:/Items/news_icon.png" }
         ListElement { name: "Tra cứu"; page: "SearchPage.qml"; icon: "qrc:/Items/search_icon.png" }
     }
 
@@ -18,7 +18,7 @@ Item {
         anchors.centerIn: parent
         model: listModel
         cellHeight: gridView.height/2
-        cellWidth: gridView.width/2
+        cellWidth: gridView.width/3
         delegate: delegate
     }
 
@@ -26,7 +26,7 @@ Item {
         id : delegate
         Item{
             height: gridView.height/2
-            width: gridView.width/2
+            width: gridView.width/3
             HomePageBigButton{
                 height: parent.height - 50
                 width: parent.width - 50
@@ -52,11 +52,11 @@ Item {
                     console.log("[LoginPage] User login: ", response.username);
                     stackView.push("HomePage.qml",{"userId": userId,"userName": response.username},StackView.Immediate)
                 }
-                else if (xhr.status === 400) {
-                    dialog.showDialog("Người dùng chưa đăng ký!")
+                else if (xhr.status === 404) {
+                    announcement.show("Người dùng chưa đăng ký!")
                     console.error("[LoginPage] Request failed with status: " + xhr.status);
                 } else {
-                    dialog.showDialog("Có lỗi xảy ra: " + xhr.status)
+                    announcement.show("Có lỗi xảy ra: " + xhr.status)
                     console.error("[LoginPage]  Request failed with status: " + xhr.status);
                 }
             }

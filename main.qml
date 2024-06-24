@@ -60,15 +60,15 @@ Window {
     }
 
     MessageDialog {
-        id: dialog
+        id: announcement
         title: "Thông báo"
         buttons: MessageDialog.Close
-        text: diaText
-        property string diaText
+        text: annText
+        property string annText
 
-        function showDialog(text){
-            dialog.diaText = text
-            dialog.open()
+        function show(text){
+            announcement.annText = text
+            announcement.open()
         }
     }
 

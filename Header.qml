@@ -16,14 +16,14 @@ Rectangle {
 
     Image {
         id: logo
-        width: 70
+        width: 80
         height: 80
         anchors {
             left: parent.left
             verticalCenter: parent.verticalCenter
             leftMargin: 20
         }
-        source: "qrc:/Items/logo.png"
+        source: "qrc:/Items/logo2.ico"
     }
 
     Column{

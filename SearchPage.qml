@@ -84,18 +84,9 @@ Item {
                     clip: true
                     model: ListModel {
                         id: resultsModel
-                        ListElement { title: "Title 1"; author: "Author 1"}
-                        ListElement { title: "Title 2"; author: "Author 2"}
-                        ListElement { title: "Title 3"; author: "Author 3"}
-                        ListElement { title: "Title 4"; author: "Author 4"}
-                        ListElement { title: "Title 5"; author: "Author 5"}
-                        ListElement { title: "Title 6"; author: "Author 6"}
-                        ListElement { title: "Title 7"; author: "Author 7"}
-                        ListElement { title: "Title 8"; author: "Author 8"}
-                        ListElement { title: "Title 9"; author: "Author 9"}
-                        ListElement { title: "Title 10"; author: "Author 10"}
-                        ListElement { title: "Title 11"; author: "Author 11"}
-                        ListElement { title: "Title 12"; author: "Author 12"}
+                        ListElement { title: "Giải tích 1"; author: "Bùi Xuân Diệu"}
+                        ListElement { title: "Giải tích 2"; author: "Lương Duyên Bình"}
+                        ListElement { title: "Giải tích 3"; author: "Trần Quốc Bình"}
                     }
 
                     delegate: Item {
@@ -122,10 +113,12 @@ Item {
                                 }
                                 Text {
                                     text: model.title
+                                    font.bold: true
                                     font.pointSize: 12
                                 }
                                 Text {
                                     text: model.author
+                                    font.italic: true
                                     font.pointSize: 12
                                 }
                             }

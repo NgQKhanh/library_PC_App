@@ -1,11 +1,20 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
+import QtQuick.Dialogs
 
 Item {
     id: borrowPage
+
+    property var userId
+    property int count: 0
+    property int currentSelected
+
+    ListModel {
+    id: bList
+    }
+
     Rectangle {
-        id : searchPage
         width: parent.width - 40
         height: parent.height - 40
         anchors.centerIn: parent
@@ -20,18 +29,19 @@ Item {
             spacing: 10
 
             Rectangle {
-                width: parent.width
+                id : headSeaction
+                width: parent.width - 200
+                anchors.horizontalCenter: parent.horizontalCenter
                 height: 50
                 color: Qt.rgba(0,0,0,0)
 
                 Text {
                     anchors{
                         left: parent.left
-                        leftMargin: 40
                     }
                     font.pointSize: 20
                     font.bold: true
-                    text: "Danh sách mượn: "
+                    text: qsTr("Danh sách mượn: ")
                     verticalAlignment: TextInput.AlignVCenter
                     Layout.preferredHeight: 50
                     Layout.preferredWidth: 400
@@ -40,49 +50,32 @@ Item {
                 FunctionButton {
                     anchors{
                         right: parent.right
-                        rightMargin: 40
                     }
-                    buttonText: "Hoàn tất"
+                    buttonText: qsTr("Hoàn tất")
                     onClicked: {
-                        // Implement search functionality here
-                        console.log("Search term:", searchField.text)
-                        console.log("Search criteria:", searchCriteria.currentText)
+                        borrowPage.sendBorrowList()
                     }
                 }
             }
 
             Rectangle {
-                width: parent.width - 80
+                id : result
+                width: parent.width - 200
                 height: parent.height - 100
                 anchors.horizontalCenter: parent.horizontalCenter
                 border.color: "grey"
                 border.width: 1
-                radius: 5
 
                 ListView {
                     id: resultsList
                     width: parent.width
                     height: parent.height
                     clip: true
-                    model: ListModel {
-                        id: resultsModel
-                        ListElement { title: "Title 1"; author: "Author 1"}
-                        ListElement { title: "Title 2"; author: "Author 2"}
-                        ListElement { title: "Title 3"; author: "Author 3"}
-                        ListElement { title: "Title 4"; author: "Author 4"}
-                        ListElement { title: "Title 5"; author: "Author 5"}
-                        ListElement { title: "Title 6"; author: "Author 6"}
-                        ListElement { title: "Title 7"; author: "Author 7"}
-                        ListElement { title: "Title 8"; author: "Author 8"}
-                        ListElement { title: "Title 9"; author: "Author 9"}
-                        ListElement { title: "Title 10"; author: "Author 10"}
-                        ListElement { title: "Title 11"; author: "Author 11"}
-                        ListElement { title: "Title 12"; author: "Author 12"}
-                    }
+                    model: bList
 
                     delegate: Item {
                         width: ListView.view.width
-                        height: 80
+                        height: 70
 
                         Rectangle {
                             id : info
@@ -101,24 +94,38 @@ Item {
                                 Text {
                                     text: model.title
                                     font.pointSize: 12
+                                    font.bold: true
                                 }
                                 Text {
                                     text: model.author
                                     font.pointSize: 12
+                                    font.italic: true
                                 }
                             }
-                            Image {
-                                width: 40
-                                height: 40
+                            Rectangle {
+                                width: 30
+                                height: 30
+                                radius: 10
+                                color: "red"
+                                Text {
+                                    text: qsTr("X")
+                                    font.pointSize: 12
+                                    font.bold: true
+                                    color: "white"
+                                    anchors.centerIn: parent
+                                }
                                 anchors {
                                     right: parent.right
                                     verticalCenter: parent.verticalCenter
                                     rightMargin: 30
                                 }
-                                source: "qrc:/Items/cancel_icon.jpg"
                                 MouseArea {
                                     anchors.fill: parent
-                                    onClicked: console.log("Cancel: " + index)
+                                    onClicked: {
+                                        borrowPage.currentSelected = index
+                                        notice.text = qsTr("Xác nhận huỷ " + bList.get(index).title)
+                                        notice.open()
+                                    }
                                 }
                             }
                         }
@@ -131,38 +138,87 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: notice
+        property string diaText
+        title: qsTr("Xác nhận")
+        text: "diaText"
+
+        buttons: MessageDialog.Cancel | MessageDialog.Ok
+
+        onAccepted: { borrowPage.removeModel(bList,borrowPage.currentSelected) }
+
+        onRejected: {}
+    }
+
     function processUARTSignal(bookId){
         console.error("[BorrowPage]  UART received: " + bookId)
-        // var xhr = new XMLHttpRequest();
-        // var url = "http://localhost:3000/app/RFIDlogin";
-        // xhr.open("POST", url);
-        // xhr.setRequestHeader("Content-Type", "application/json");
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:3000/app/bookName?bookID="+bookId;
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
 
-        // xhr.onreadystatechange = function() {
-        //     if (xhr.readyState === XMLHttpRequest.DONE) {
-        //         if (xhr.status === 200) {
-        //             var response = JSON.parse(xhr.responseText);
-        //             console.log("[LoginPage] User login: ", response.username);
-        //             stackView.push("HomePage.qml",{"userId": userId,"userName": response.username},StackView.Immediate)
-        //         }
-        //         else if (xhr.status === 400) {
-        //             dialog.showDialog("Người dùng chưa đăng ký!")
-        //             console.error("[LoginPage] Request failed with status: " + xhr.status);
-        //         } else {
-        //             dialog.showDialog("Có lỗi xảy ra: " + xhr.status)
-        //             console.error("[LoginPage]  Request failed with status: " + xhr.status);
-        //         }
-        //     }
-        // };
-        // var sendData = JSON.stringify({ "userId": userId });
-        // xhr.send(sendData);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    borrowPage.addModel(bList,bookId,response.bookName,response.author)
+                }
+                else if (xhr.status === 404) {
+                    announcement.show("Không tìm thấy dữ liệu!")
+                    console.error("[BorrowPage] Request failed with status: " + xhr.status);
+                } else {
+                    announcement.show("Có lỗi xảy ra: " + xhr.status)
+                    console.error("[BorrowPage]  Request failed with status: " + xhr.status);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function sendBorrowList(){
+        var jsonArray = [];
+        for (var i = 0; i < bList.count; i++) {
+            var item = bList.get(i);
+            jsonArray.push({
+                bookID: item.id
+            });
+        }
+       // var jsonString = JSON.stringify(jsonArray);
+
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:3000/app/confirmBorrow";
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    announcement.show("Mượn sách thành công!")
+                    console.error("[BorrowPage] Borrow Success!");
+                } else {
+                    announcement.show("Có lỗi xảy ra!")
+                    console.error("[BorrowPage] Request failed with status: " + xhr.status);
+                }
+            }
+        };
+        var sendData = JSON.stringify({ "userId": userId, "bList": jsonArray});
+        xhr.send(sendData);
+    }
+
+    function addModel (model, id, title, author) {
+        model.append( { id: id, title : title, author : author } )
+    }
+
+    function removeModel (model, index) {
+        model.remove( index )
     }
 
     function setup() {
         console.log("Nav => BorrowPage")
         header.welcomeText = def.borrowHeaderText
         funcBar.adminBtnEnable = false
-        funcBar.homeBtnEnable = true
+        funcBar.homeBtnEnable = false
         funcBar.backBtnEnable = true
         funcBar.logoutBtnEnable = true
         funcBar.setHomePage = "HomePage.qml"
