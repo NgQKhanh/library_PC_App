@@ -34,14 +34,14 @@ Item {
                 buttonText: name
                 imageSource: icon
                 onClicked: {
-                    stackView.push("HomePage.qml",{"userId": "1","userName": "Nguyễn Quốc Khánh"},StackView.Immediate) }
+                    stackView.push(page,StackView.Immediate) }
             }
         }
     }
 
     function processUARTSignal(userId){
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:3000/app/RFIDlogin";
+        var url = common.baseUrl + common.loginUrl;
         xhr.open("POST", url);
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -50,7 +50,8 @@ Item {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     console.log("[LoginPage] User login: ", response.username);
-                    stackView.push("HomePage.qml",{"userId": userId,"userName": response.username},StackView.Immediate)
+                    common.login(userId,response.username);
+                    stackView.push("HomePage.qml",StackView.Immediate)
                 }
                 else if (xhr.status === 404) {
                     announcement.show("Người dùng chưa đăng ký!")

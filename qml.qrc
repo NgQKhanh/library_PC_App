@@ -15,5 +15,8 @@
         <file>BorrowPage.qml</file>
         <file>ReturnPage.qml</file>
         <file>Definition.qml</file>
+        <file>Common.qml</file>
+        <file>NewsPage.qml</file>
+        <file>MyItemsPage.qml</file>
     </qresource>
 </RCC>

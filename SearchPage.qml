@@ -5,6 +5,11 @@ import QtQuick.Layouts 1.12
 Item {
     width: parent.width
     height: parent.height
+
+    ListModel {
+        id: bookList
+    }
+
     Rectangle {
         id : searchPage
         width: parent.width - 40
@@ -25,7 +30,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter
 
                 TextField {
-                    id: searchField
+                    id: keyword
                     font.pointSize: 12
                     placeholderText: "Nhập từ khoá"
                     verticalAlignment: TextInput.AlignVCenter
@@ -34,8 +39,16 @@ Item {
                     Layout.preferredWidth: 400
                 }
 
+                ListModel {
+                    id : listField
+                    ListElement { text: "Tiêu đề"; name: "bookName"}
+                    ListElement { text: "Tác giả"; name: "author"}
+                    ListElement { text: "Thể loại"; name: "category"}
+                    ListElement { text: "Nhà xuất bản"; name: "pulisher"}
+                }
+
                 ComboBox {
-                    id: searchCriteria
+                    id: category
                     font.pointSize: 12
                     leftPadding: 24
                     model: ["Tiêu đề", "Tác giả", "Phân loại", "Nhà xuất bản"]
@@ -61,9 +74,9 @@ Item {
                     id : btnSearch
                     buttonText: "Tìm kiếm"
                     onClicked: {
-                        // Implement search functionality here
-                        console.log("Search term:", searchField.text)
-                        console.log("Search criteria:", searchCriteria.currentText)
+                        searchTitleBooks(keyword.text,listField.get(category.currentIndex).name)
+                        console.log("Search keyword:", keyword.text)
+                        console.log("Search category:", listField.get(category.currentIndex).name)
                     }
                 }
             }
@@ -82,12 +95,7 @@ Item {
                     width: parent.width
                     height: parent.height
                     clip: true
-                    model: ListModel {
-                        id: resultsModel
-                        ListElement { title: "Giải tích 1"; author: "Bùi Xuân Diệu"}
-                        ListElement { title: "Giải tích 2"; author: "Lương Duyên Bình"}
-                        ListElement { title: "Giải tích 3"; author: "Trần Quốc Bình"}
-                    }
+                    model: bookList
 
                     delegate: Item {
                         width: ListView.view.width
@@ -126,8 +134,9 @@ Item {
                                 id: mouseArea
                                 anchors.fill: parent
                                 onClicked: {
-                                    console.log("Select: " + model.title + " " + model.author)
-                                    stackView.push("SearchDetailPage.qml",StackView.Immediate)
+                                    stackView.push("SearchDetailPage.qml",
+                                                   {"id": model.id,"title": model.title,"author":model.author,"publisher":publisher,"category":category}
+                                                   ,StackView.Immediate)
                                 }
                             }
                         }
@@ -144,7 +153,7 @@ Item {
         console.log("Nav => SearchPage")
         header.welcomeText = def.searchHeaderText
         funcBar.adminBtnEnable = false
-        funcBar.homeBtnEnable = true
+        funcBar.homeBtnEnable = false
         funcBar.backBtnEnable = true
 
         if(true === funcBar.isLogin){
@@ -154,6 +163,40 @@ Item {
             funcBar.logoutBtnEnable = false
             funcBar.setHomePage = "LoginPage.qml"
         }
+    }
+
+    function searchTitleBooks(key, field){
+        var xhr = new XMLHttpRequest();
+        var url = common.baseUrl + common.searchUrl + "?type=title&key=" + key + "&field=" + field;
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText)
+                    bookList.clear()
+                    for (var i = 0; i < response.list.length; i++) {
+                        var book = response.list[i]
+                        bookList.append({
+                            id: book.id,
+                            title: book.bookName,
+                            author: book.author,
+                            publisher: book.publisher,
+                            category: book.category
+                        })
+                    }
+                }
+                else if (xhr.status === 404) {
+                    announcement.show("Không tìm thấy dữ liệu!")
+                    console.error("[SearchPage] Request failed with status: " + xhr.status);
+                } else {
+                    announcement.show("Có lỗi xảy ra: " + xhr.status)
+                    console.error("[SearchPage]  Request failed with status: " + xhr.status);
+                }
+            }
+        };
+        xhr.send();
     }
 
     Component.onCompleted: {

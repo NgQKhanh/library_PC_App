@@ -4,14 +4,12 @@ import QtQuick.Controls 2.12
 
 Item {
     id : homepage
-    property var userId
-    property var userName
 
     ListModel {
         id: listModel
-        ListElement { name: "Tin tức"; page: ""; icon: "qrc:/Items/news_icon.png" }
+        ListElement { name: "Tin tức"; page: "NewsPage.qml"; icon: "qrc:/Items/news_icon.png" }
         ListElement { name: "Tra cứu"; page: "SearchPage.qml"; icon: "qrc:/Items/search_icon.png" }
-        ListElement { name: "Của tôi"; page: ""; icon: "qrc:/Items/myAccount_icon.png" }
+        ListElement { name: "Của tôi"; page: "MyItemsPage.qml"; icon: "qrc:/Items/myAccount_icon.png" }
         ListElement { name: "Mượn sách"; page: "BorrowPage.qml"; icon: "qrc:/Items/borrow_icon.png" }
         ListElement { name: "Trả sách"; page: "ReturnPage.qml"; icon: "qrc:/Items/return_icon.png" }
     }
@@ -39,14 +37,14 @@ Item {
                 anchors.centerIn: parent
                 buttonText: name
                 imageSource: icon
-                onClicked: stackView.push(page,{"userId": userId},StackView.Immediate)
+                onClicked: stackView.push(page,StackView.Immediate)
             }
         }
     }
 
     function setup() {
         console.log("Nav => HomPage")
-        header.welcomeText = def.homeHeaderText + userName
+        header.welcomeText = qsTr("Xin chào: ") + common.username
         funcBar.isLogin = true
         funcBar.adminBtnEnable = true
         funcBar.homeBtnEnable = false

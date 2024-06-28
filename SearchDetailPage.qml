@@ -3,8 +3,19 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 
 Item {
+
+    id : searchDetailPage
+    property var id
+    property var title
+    property var author
+    property var category
+    property var publisher
+
+    ListModel {
+        id: bookCopyList
+    }
+
     Rectangle {
-        id : searchPage
         width: parent.width - 40
         height: parent.height - 40
         anchors.centerIn: parent
@@ -27,8 +38,7 @@ Item {
                 }
 
                 Text {
-                    id : title
-                    text: "Giải tích 1"
+                    text: title
                     color: "darkblue"
                     font.bold: true
                     font.pointSize: 20
@@ -40,7 +50,7 @@ Item {
                     font.pointSize: 16
                 }
                 Text {
-                    text: "Bùi Xuân Diệu"
+                    text: author
                     color: "black"
                     font.pointSize: 14
                 }
@@ -51,7 +61,7 @@ Item {
                     font.pointSize: 16
                 }
                 Text {
-                    text: "Đại học Bách Khoa Hà Nội"
+                    text: publisher
                     color: "black"
                     font.pointSize: 14
                 }
@@ -60,6 +70,11 @@ Item {
                     color: "blue"
                     font.bold: true
                     font.pointSize: 16
+                }
+                Text {
+                    text: category
+                    color: "black"
+                    font.pointSize: 14
                 }
             }
 
@@ -125,7 +140,6 @@ Item {
                     id : dataShow
                     width: parent.width
                     height: parent.height - 100
-                    //Layout.alignment: Qt.AlignHCenter
                     color: "lightgray"
                     border.color: "grey"
                     border.width: 1
@@ -136,13 +150,7 @@ Item {
                         width: parent.width
                         height: parent.height
                         clip: true
-                        model: ListModel {
-                            id: resultsModel
-                            ListElement { location: "A10115"; status: "0"}
-                            ListElement { location: "A10116"; status: "0"}
-                            ListElement { location: "A10117"; status: "1"}
-                            ListElement { location: "A10118"; status: "1"}
-                        }
+                        model: bookCopyList
 
                         delegate: Item {
                             width: ListView.view.width
@@ -178,7 +186,7 @@ Item {
                                 border.color: "grey"
                                 border.width: 1
                                 Text {
-                                    text: location
+                                    text: model.location
                                     font.pointSize: 12
                                     anchors.centerIn: parent
                                 }
@@ -196,7 +204,7 @@ Item {
                                 border.color: "grey"
                                 border.width: 1
                                 Text {
-                                    text: status
+                                    text: model.status
                                     font.pointSize: 12
                                     anchors.centerIn: parent
                                 }
@@ -225,6 +233,47 @@ Item {
             funcBar.logoutBtnEnable = false
             funcBar.setHomePage = "LoginPage.qml"
         }
+
+        searchBooks(id)
+    }
+
+    function searchBooks(id){
+        var xhr = new XMLHttpRequest();
+        var url = common.baseUrl + common.searchUrl + "?type=copy&id=" + id;
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText)
+                    bookCopyList.clear()
+                    for (var i = 0; i < response.list.length; i++) {
+                        var book = response.list[i]
+                        var status;
+                        if(0 === book.status) {
+                            status = qsTr("Có sẵn")
+                        }else if(1 === book.status){
+                            status = qsTr("Đang mượn")
+                        }
+
+                        bookCopyList.append({
+                            bookID: book.bookID,
+                            status: status,
+                            location: book.location
+                        })
+                    }
+                }
+                else if (xhr.status === 404) {
+                    announcement.show("Không tìm thấy dữ liệu!")
+                    console.error("[SearchDetail] Request failed with status: " + xhr.status);
+                } else {
+                    announcement.show("Có lỗi xảy ra: " + xhr.status)
+                    console.error("[SearchDetail]  Request failed with status: " + xhr.status);
+                }
+            }
+        };
+        xhr.send();
     }
 
     Component.onCompleted: {

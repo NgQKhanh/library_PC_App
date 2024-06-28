@@ -10,9 +10,22 @@ Window {
     width: 1024
     height: 680
     title: qsTr("Self Checkin")
+    property bool isStart: true
+
+    Timer {
+        id: startupDelay
+        interval: 3000
+        repeat: false
+        running: true
+        onTriggered: { root.isStart = false }
+    }
 
     Definition{
         id: def
+    }
+
+    Common{
+        id: common
     }
 
     Image {
@@ -24,8 +37,8 @@ Window {
 
     Header{
         id : header
-        welcomeText : "Quẹt thẻ để đăng nhập"
-        libraryName: "Thư viện Đại Học FKFNKJDBVKJD"
+        welcomeText : qsTr("Quẹt thẻ để đăng nhập")
+        libraryName: common.libraryName
     }
 
     Rectangle{
@@ -77,7 +90,9 @@ Window {
         portName: "COM3"
         baudRate: 115200
         onDataReceived: {
-            stackView.handleUARTSignal(data)
+            if(false === root.isStart){
+                stackView.handleUARTSignal(data)
+            }
         }
     }
 
