@@ -11,7 +11,7 @@ Item {
     property int currentSelected
 
     ListModel {
-    id: bList
+        id: bList
     }
 
     Rectangle {
@@ -151,10 +151,30 @@ Item {
         onRejected: {}
     }
 
-    function processUARTSignal(bookId){
-        console.error("[BorrowPage]  UART received: " + bookId)
+    function processUARTSignal(id){
+        console.log("[BorrowPage]  UART received: " + id)
+        if(true === isValid(id)){
+            getBookTitle(id)
+        }
+    }
+
+    function isValid(bookID) {
+        for (var i = 0; i < bList.count; i++) {
+            if(bookID === bList.get(i).id) {
+                announcement.show(qsTr("Trùng lặp tài liệu đã chọn!"))
+                return false
+            }
+        }
+        if(bList.count >= common.maxBorrow){
+            announcement.show(qsTr("Vượt quá số lượng"))
+            return false
+        }
+        return true;
+    }
+
+    function getBookTitle(bookID){
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:3000/app/bookName?bookID="+bookId;
+        var url = common.baseUrl + common.getBookNameUrl+ "?bookID="+bookID;
         xhr.open("GET", url);
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -162,7 +182,7 @@ Item {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
-                    borrowPage.addModel(bList,bookId,response.bookName,response.author)
+                    borrowPage.addModel(bList,bookID,response.bookName,response.author)
                 }
                 else if (xhr.status === 404) {
                     announcement.show("Không tìm thấy dữ liệu!")
@@ -176,6 +196,16 @@ Item {
         xhr.send();
     }
 
+    function setup() {
+        console.log("Nav => BorrowPage")
+        header.welcomeText = def.borrowHeaderText
+        funcBar.adminBtnEnable = false
+        funcBar.homeBtnEnable = false
+        funcBar.backBtnEnable = true
+        funcBar.logoutBtnEnable = true
+        funcBar.setHomePage = "HomePage.qml"
+    }
+
     function sendBorrowList(){
         var jsonArray = [];
         for (var i = 0; i < bList.count; i++) {
@@ -184,10 +214,9 @@ Item {
                 bookID: item.id
             });
         }
-       // var jsonString = JSON.stringify(jsonArray);
 
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:3000/app/confirmBorrow";
+        var url = common.baseUrl + common.confirmBorrowUrl;
         xhr.open("POST", url);
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -196,6 +225,7 @@ Item {
                 if (xhr.status === 200) {
                     announcement.show("Mượn sách thành công!")
                     console.error("[BorrowPage] Borrow Success!");
+                    bList.clear()
                 } else {
                     announcement.show("Có lỗi xảy ra!")
                     console.error("[BorrowPage] Request failed with status: " + xhr.status);
@@ -212,16 +242,6 @@ Item {
 
     function removeModel (model, index) {
         model.remove( index )
-    }
-
-    function setup() {
-        console.log("Nav => BorrowPage")
-        header.welcomeText = def.borrowHeaderText
-        funcBar.adminBtnEnable = false
-        funcBar.homeBtnEnable = false
-        funcBar.backBtnEnable = true
-        funcBar.logoutBtnEnable = true
-        funcBar.setHomePage = "HomePage.qml"
     }
 
     Component.onCompleted: {

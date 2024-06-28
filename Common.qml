@@ -3,18 +3,26 @@ import QtQuick 2.15
 
 Item {
     id: common
+
+    property string libraryName: "Thư viện Đại Học HAKYU"
+    property int maxBorrow: 5
+
     property bool _isLogin: false
     property string _userID: ""
     property string _username: ""
-    property string libraryName: "Thư viện Đại Học HAKYU"
-
-    property string baseUrl: "http://localhost:3000/app"
-    property string loginUrl: "/RFIDlogin"
-    property string searchUrl: "/search"
 
     readonly property bool isLogin: _isLogin
     readonly property string userID: _userID
     readonly property string username: _username
+
+    property string baseUrl: "http://localhost:3000/app"
+    property string loginUrl: "/RFIDlogin"
+    property string searchUrl: "/search"
+    property string confirmBorrowUrl: "/confirmBorrow"
+    property string confirmReturnUrl: "/confirmReturn"
+    property string getBookNameUrl: "/bookName"
+
+    property int maxBorrow: 5
 
     function login(id, user) {
         _username = user

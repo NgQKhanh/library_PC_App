@@ -9,7 +9,7 @@ Window {
     visible: true
     width: 1024
     height: 680
-    title: qsTr("Self Checkin")
+    title: qsTr("Self Service")
     property bool isStart: true
 
     Timer {
@@ -74,7 +74,7 @@ Window {
 
     MessageDialog {
         id: announcement
-        title: "Thông báo"
+        title: qsTr("Thông báo")
         buttons: MessageDialog.Close
         text: annText
         property string annText

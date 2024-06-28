@@ -151,10 +151,27 @@ Item {
         onRejected: {}
     }
 
-    function processUARTSignal(bookId){
-        console.error("[returnPage]  UART received: " + bookId)
+    function processUARTSignal(id){
+        console.log("[BorrowPage]  UART received: " + id)
+        if(true === isValid(id)){
+            getBookTitle(id)
+        }
+    }
+
+    function isValid(bookID) {
+        for (var i = 0; i < rList.count; i++) {
+            if(bookID === rList.get(i).id) {
+                announcement.show(qsTr("Trùng lặp tài liệu đã chọn!"))
+                return false
+            }
+        }
+        return true;
+    }
+
+    function getBookTitle(bookID){
+        console.error("[returnPage]  UART received: " + bookID)
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:3000/app/bookName?bookID="+bookId;
+        var url = common.baseUrl + common.getBookNameUrl+ "?bookID="+bookID;
         xhr.open("GET", url);
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -162,7 +179,7 @@ Item {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
-                    returnPage.addModel(rList,bookId,response.bookName,response.author)
+                    returnPage.addModel(rList,bookID,response.bookName,response.author)
                 }
                 else if (xhr.status === 404) {
                     announcement.show("Không tìm thấy dữ liệu!")
@@ -186,7 +203,7 @@ Item {
         }
 
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:3000/app/confirmReturn";
+        var url = common.baseUrl + common.confirmReturnUrl;
         xhr.open("POST", url);
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -195,6 +212,7 @@ Item {
                 if (xhr.status === 200) {
                     announcement.show("Trả sách thành công!")
                     console.error("[returnPage] Borrow Success!");
+                    rList.clear()
                 } else {
                     announcement.show("Có lỗi xảy ra!")
                     console.error("[returnPage] Request failed with status: " + xhr.status);
