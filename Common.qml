@@ -15,14 +15,16 @@ Item {
     readonly property string userID: _userID
     readonly property string username: _username
 
+    property string defaultPortName: "COM5"
+    property int startupPeriod: 2000
+
+
     property string baseUrl: "http://localhost:3000/app"
     property string loginUrl: "/RFIDlogin"
     property string searchUrl: "/search"
     property string confirmBorrowUrl: "/confirmBorrow"
     property string confirmReturnUrl: "/confirmReturn"
     property string getBookNameUrl: "/bookName"
-
-    property int maxBorrow: 5
 
     function login(id, user) {
         _username = user

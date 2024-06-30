@@ -6,7 +6,6 @@ import QtQuick.Dialogs
 Item {
     id: borrowPage
 
-    property var userId
     property int count: 0
     property int currentSelected
 
@@ -210,9 +209,7 @@ Item {
         var jsonArray = [];
         for (var i = 0; i < bList.count; i++) {
             var item = bList.get(i);
-            jsonArray.push({
-                bookID: item.id
-            });
+            jsonArray.push(item.id);
         }
 
         var xhr = new XMLHttpRequest();
@@ -232,7 +229,7 @@ Item {
                 }
             }
         };
-        var sendData = JSON.stringify({ "userId": userId, "bList": jsonArray});
+        var sendData = JSON.stringify({ "userID": common.userID, "bList": jsonArray});
         xhr.send(sendData);
     }
 

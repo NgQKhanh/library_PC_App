@@ -15,7 +15,7 @@ Item {
         console.log("Nav => NewsPage")
         header.welcomeText = qsTr("Tin tức")
         funcBar.adminBtnEnable = false
-        funcBar.homeBtnEnable = true
+        funcBar.homeBtnEnable = false
         funcBar.backBtnEnable = true
 
         if(true === funcBar.isLogin){

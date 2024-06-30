@@ -14,10 +14,12 @@ Window {
 
     Timer {
         id: startupDelay
-        interval: 3000
+        interval: 2000
         repeat: false
         running: true
-        onTriggered: { root.isStart = false }
+        onTriggered: {
+            root.isStart = false
+        }
     }
 
     Definition{
@@ -97,6 +99,7 @@ Window {
     }
 
     Component.onCompleted: {
+        uartReader.portName = common.defaultPortName
         uartReader.openPort()
     }
 }
