@@ -200,6 +200,7 @@ Item {
         header.welcomeText = def.borrowHeaderText
         funcBar.adminBtnEnable = false
         funcBar.homeBtnEnable = false
+        funcBar.helpBtnEnable = true
         funcBar.backBtnEnable = true
         funcBar.logoutBtnEnable = true
         funcBar.setHomePage = "HomePage.qml"

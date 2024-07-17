@@ -260,7 +260,7 @@ Item {
                         bookCopyList.append({
                             bookID: book.bookID,
                             status: status,
-                            location: book.location
+                            location: locationCode2Text(book.location)
                         })
                     }
                 }
@@ -275,6 +275,15 @@ Item {
         };
         xhr.send();
     }
+
+    function locationCode2Text(code) {
+            var prefix = code.substring(0, 1);   // P
+            var roomNumber = code.substring(1, 4); // 302
+            var shelf = code.substring(4, 5);   // H
+            var shelfNumber = code.substring(5);   // 003
+
+            return prefix + "." + roomNumber + ", Kệ " + shelf + shelfNumber;
+        }
 
     Component.onCompleted: {
         setup()

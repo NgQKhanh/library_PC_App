@@ -17,6 +17,7 @@ Rectangle {
     property bool logoutBtnEnable
     property bool homeBtnEnable
     property bool backBtnEnable
+    property bool helpBtnEnable
     property bool isLogin
 
     signal backClick
@@ -67,8 +68,8 @@ Rectangle {
         FunctionButton{
             id: helpBtn
             buttonText: def.fBtnHelp
-            //visible: backBtnEnable
-            //onClicked: backClick()
+            visible: helpBtnEnable
+            onClicked: stackView.push("helpPage.qml",StackView.Immediate)
         }
     }
 

@@ -35,6 +35,7 @@ Item {
                     placeholderText: "Nhập từ khoá"
                     verticalAlignment: TextInput.AlignVCenter
                     leftPadding: 24
+                    maximumLength: 200
                     Layout.preferredHeight: 50
                     Layout.preferredWidth: 400
                 }
@@ -176,15 +177,19 @@ Item {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText)
                     bookList.clear()
-                    for (var i = 0; i < response.list.length; i++) {
-                        var book = response.list[i]
-                        bookList.append({
-                            id: book.id,
-                            title: book.bookName,
-                            author: book.author,
-                            publisher: book.publisher,
-                            category: book.category
-                        })
+                    if(0 === response.list.length){
+                        announcement.show("Không tìm thấy dữ liệu!");
+                    } else {
+                        for (var i = 0; i < response.list.length; i++) {
+                            var book = response.list[i]
+                            bookList.append({
+                                id: book.id,
+                                title: book.bookName,
+                                author: book.author,
+                                publisher: book.publisher,
+                                category: book.category
+                            })
+                        }
                     }
                 }
                 else if (xhr.status === 404) {

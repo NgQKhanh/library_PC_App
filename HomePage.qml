@@ -47,6 +47,7 @@ Item {
         header.welcomeText = qsTr("Xin chào: ") + common.username
         funcBar.isLogin = true
         funcBar.adminBtnEnable = true
+        funcBar.helpBtnEnable = true
         funcBar.homeBtnEnable = false
         funcBar.backBtnEnable = false
         funcBar.logoutBtnEnable = true

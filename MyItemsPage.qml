@@ -3,18 +3,19 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 
 Item {
+    id: myItemsPage
 
     ListModel {
         id : bList
-        ListElement { title: "title1"; borrowDate: "25-01-02"; dueDate: "25-01-24" }
-        ListElement { title: "title1"; borrowDate: "25-01-02"; dueDate: "25-01-24" }
-        ListElement { title: "title1"; borrowDate: "25-01-02"; dueDate: "25-01-24" }
+        // ListElement { title: "Giải tích 1"; borrowDate: "20-01-2024"; dueDate: "20-02-2024" }
+        // ListElement { title: "Đại số tuyến tính"; borrowDate: "25-01-2024"; dueDate: "25-02-2024" }
+        // ListElement { title: "Tin học đại cương"; borrowDate: "26-01-2024"; dueDate: "26-02-2024" }
     }
 
     ListModel {
         id : rsvnList
-        ListElement { seat: "Bàn 1 Ghế 1"; room: "201"; shift: "1"; date: "25-01-24"}
-        ListElement { seat: "Bàn 1 Ghế 1"; room: "201"; shift: "1"; date: "25-01-24"}
+        // ListElement { seat: "Bàn 1 Ghế 1"; room: "201"; shift: "1"; date: "27-01-2024"}
+        // ListElement { seat: "Bàn 1 Ghế 1"; room: "201"; shift: "1"; date: "28-01-2024"}
     }
 
     Rectangle {
@@ -182,6 +183,7 @@ Item {
                                             text: model.dueDate
                                             font.pointSize: 12
                                             anchors.centerIn: parent
+                                            color: model.status === "overdue" ? "red" : "black"
                                         }
                                     }
                                 }
@@ -362,6 +364,87 @@ Item {
         }
     }
 
+    function getBorrowBookList(userID){
+        var xhr = new XMLHttpRequest();
+        var url = common.baseUrl + common.getBBListUrl+ "?userID="+userID;
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var borrowedBooks = response.borrowedBookList;
+
+                    for (var i = 0; i < borrowedBooks.length; i++) {
+                        var book = borrowedBooks[i];
+                        var currentDate = new Date();
+                        var dueDate = new Date(book.dueDate);
+                        var status = "normal"
+
+                        if(currentDate > dueDate) {
+                            status = "overdue"
+                            console.log("over")
+                        }
+
+                        bList.append({
+                            title: book.bookName,
+                            borrowDate: book.borrowDate,
+                            dueDate: book.dueDate,
+                            status: status
+                        });
+                    }
+                }
+                else if (xhr.status === 404) {
+                    console.error("[myItem] Not found! ");
+                } else {
+                    announcement.show("Có lỗi xảy ra: " + xhr.status)
+                    console.error("[myItem] Request failed with status: " + xhr.status);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function getSeatRsvn(userID){
+        var xhr = new XMLHttpRequest();
+        var url = common.baseUrl + common.getSeatRsvnUrl+ "?userID="+userID;
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var seats = response.uSeats;
+
+                    for (var i = 0; i < seats.length; i++) {
+                        var seat = seats[i];
+                        rsvnList.append({
+                            seat: seatCode(seat.seat),
+                            shift: seat.shift,
+                            room: seat.room,
+                            date: seat.date
+                        });
+                    }
+                }
+                else if (xhr.status === 404) {
+                    console.error("[myItem] Not found! ");
+                } else {
+                    announcement.show("Có lỗi xảy ra: " + xhr.status)
+                    console.error("[myItem] Request failed with status: " + xhr.status);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function seatCode(code){
+        var chair = code%100;
+        var table = (code - chair)/100;
+        return "Bàn " + table + " Ghế " + chair;
+    }
+
     function setup() {
         console.log("Nav => MyItemsPage")
         header.welcomeText = qsTr("Của tôi")
@@ -376,6 +459,11 @@ Item {
             funcBar.logoutBtnEnable = false
             funcBar.setHomePage = "LoginPage.qml"
         }
+
+        // getBorrowBookList("1")
+        // getSeatRsvn("1")
+        getBorrowBookList(common.userID)
+        getSeatRsvn(common.userID)
     }
 
     Component.onCompleted: {

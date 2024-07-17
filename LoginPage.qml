@@ -62,7 +62,7 @@ Item {
                 }
             }
         };
-        var sendData = JSON.stringify({ "userId": userId });
+        var sendData = JSON.stringify({ "userID": userId });
         xhr.send(sendData);
     }
 
@@ -70,6 +70,7 @@ Item {
         console.log("Nav => LoginPage")
         header.welcomeText = def.loginHeaderText
         funcBar.isLogin = false
+        funcBar.helpBtnEnable = true
         funcBar.adminBtnEnable = true
         funcBar.homeBtnEnable = false
         funcBar.backBtnEnable = false

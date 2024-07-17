@@ -18,5 +18,6 @@
         <file>Common.qml</file>
         <file>NewsPage.qml</file>
         <file>MyItemsPage.qml</file>
+        <file>helpPage.qml</file>
     </qresource>
 </RCC>

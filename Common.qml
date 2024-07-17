@@ -4,7 +4,7 @@ import QtQuick 2.15
 Item {
     id: common
 
-    property string libraryName: "Thư viện Đại Học HAKYU"
+    property string libraryName: "Thư viện Trường Điện - Điện Tử"
     property int maxBorrow: 5
 
     property bool _isLogin: false
@@ -25,6 +25,8 @@ Item {
     property string confirmBorrowUrl: "/confirmBorrow"
     property string confirmReturnUrl: "/confirmReturn"
     property string getBookNameUrl: "/bookName"
+    property string getBBListUrl: "/getBBList"
+    property string getSeatRsvnUrl: "/getUserSeatRsvn"
 
     function login(id, user) {
         _username = user

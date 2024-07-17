@@ -11,5 +11,6 @@
         <file>Items/blue_button.png</file>
         <file>Items/logo2.ico</file>
         <file>Items/myAccount_icon.png</file>
+        <file>Items/help.png</file>
     </qresource>
 </RCC>
